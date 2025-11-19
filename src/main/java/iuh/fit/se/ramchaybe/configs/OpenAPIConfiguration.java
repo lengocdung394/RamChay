@@ -24,8 +24,8 @@ public class OpenAPIConfiguration {
         return new OpenAPI().info(information).servers(List.of(server));
     }
 
-    @Bean
-    public OpenAPI defineOpenAPI1() {
-        return new OpenAPI().addServersItem(new Server().url("/api"));
-    }
+//    @Bean
+//    public OpenAPI defineOpenAPI1() {
+//        return new OpenAPI().addServersItem(new Server().url("/api"));
+//    }
 }

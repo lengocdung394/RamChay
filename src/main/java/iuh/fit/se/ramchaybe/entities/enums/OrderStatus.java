@@ -1,4 +1,4 @@
-package iuh.fit.se.ramchaybe.entities;
+package iuh.fit.se.ramchaybe.entities.enums;
 
 public enum OrderStatus {
     PENDING_PAYMENT,

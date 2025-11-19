@@ -1,29 +1,39 @@
 package iuh.fit.se.ramchaybe.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@Table(name = "carts")
 public class Cart {
     @Id
-    private int cardId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
+    Long id;
+
+    @CreatedDate
+    @Column(updatable = false)
+    LocalDateTime createdAt;
+
+    @LastModifiedDate
+    LocalDateTime updatedAt;
+
     @OneToOne
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    Customer customer;
+
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems;
-
-    public Cart(int cardId, Customer customer, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.cardId = cardId;
-        this.customer = customer;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Cart() {
-    }
+    List<CartItem> cartItems;
 }

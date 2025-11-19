@@ -1,31 +1,43 @@
 package iuh.fit.se.ramchaybe.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@Table(name = "users")
 public class User {
     @Id
-    private int userId;
-    private String name;
-    private String password;
-    private boolean isActive;
-    private LocalDate date;
-    @ManyToMany
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    Long id;
+
+    String name;
+    String password;
+
+    @Column(name = "is_active")
+    boolean isActive;
+
+    @CreatedDate
+    @Column(updatable = false)
+    LocalDateTime createdAt;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name="user_role",  joinColumns = @JoinColumn(name = "user_id"),
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles;
-    public User(int userId, String name, String password, boolean isActive, LocalDate date) {
-        this.userId =  userId;
-        this.name = name;
-        this.password = password;
-        this.isActive = isActive;
-        this.date = date;
-    }
-
-    public User() {
-    }
+    private Set<Role> roles;
 }

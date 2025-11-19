@@ -1,26 +1,34 @@
 package iuh.fit.se.ramchaybe.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Set;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "roles")
 public class Role {
     @Id
-    private  int roleId;
-    private String name;
-    private String description;
-    @ManyToMany(mappedBy = "users")
-    private List<User> users;
-    public Role(int roleId, String name, String description) {
-        this.roleId = roleId;
-        this.name = name;
-        this.description = description;
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "role_id")
+    Long id;
 
-    public Role() {
-    }
+    String name;
+
+    String description;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "role_permissions",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private Set<Permission> permissions;
 }

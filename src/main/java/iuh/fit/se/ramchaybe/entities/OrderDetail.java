@@ -1,28 +1,34 @@
 package iuh.fit.se.ramchaybe.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "order_detail")
+@Table(name = "order_details")
 public class OrderDetail {
     @Id
-    private int oderDetailId;
-    private int quantity;
-    private double unitPrice;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_detail_id")
+    Long id;
+
+    int quantity;
+
+    @Column(name = "unit_price")
+    double unitPrice;
+
     // Mỗi chi tiết đơn hàng thuộc về 1 đơn hàng
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    Order order;
 
     // Mỗi chi tiết đơn hàng chứa 1 sản phẩm
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    public OrderDetail(int quantity, double unitPrice) {
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-    }
-
-    public OrderDetail() {}
+    Product product;
 }

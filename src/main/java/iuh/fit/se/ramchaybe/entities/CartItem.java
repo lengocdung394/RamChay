@@ -1,29 +1,34 @@
 package iuh.fit.se.ramchaybe.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "cart_item")
+@Table(name = "cart_items")
 public class CartItem {
     @Id
-    private int cartItemId;
-    private int quantity;
-    private double unitPrice;
-    private double subtotal;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_item_id")
+    Long id;
+
+    int quantity;
+
+    @Column(name = "unit_price")
+    double unitPrice;
+
+    double subtotal;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    Product product;
+
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    private Cart cart;
-
-
-    public CartItem(int cartItemId, int quantity, double unitPrice, double subtotal) {
-        this.cartItemId = cartItemId;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.subtotal = subtotal;
-    }
-
-    public CartItem() {}
+    Cart cart;
 }
