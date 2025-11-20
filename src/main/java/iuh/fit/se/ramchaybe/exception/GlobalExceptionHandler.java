@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler { // Xử lý lỗi tập trung
 
     // Bắt lỗi đã được định nghĩa (AppException)
     @ExceptionHandler(value = AppException.class)

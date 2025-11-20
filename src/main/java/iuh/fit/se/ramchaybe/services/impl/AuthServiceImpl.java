@@ -22,6 +22,7 @@ import iuh.fit.se.ramchaybe.services.AuthService;
 import iuh.fit.se.ramchaybe.services.RoleService;
 import iuh.fit.se.ramchaybe.services.UserService;
 import iuh.fit.se.ramchaybe.utils.JwtSecretReader;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -59,14 +60,14 @@ public class AuthServiceImpl implements AuthService {
     public CustomerRegistrationResponse register(CustomerRegistrationRequest request) {
         Customer customer = new Customer();
 
-        Role role = roleService.findByName("CUSTOMER");
+        Role role = roleService.findByName("ROLE_CUSTOMER");
 
         // hash mật khẩu
         String hashed = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
         customer.setUsername(request.getUsername());
         customer.setPassword(hashed);
         customer.setFullName(request.getFullName());
-        customer.setPhone(request.getPhone());
+        customer.setPhones(Set.of(request.getPhone()));
 
         // Gán role là CUSTOMER khi đăng kí
         customer.setRoles(Set.of(role));
@@ -78,6 +79,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) throws JOSEException {
         User user = userService.findByUsername(request.getUsername());
+
+        user.getRoles().forEach(System.out::println);
 
         if (!BCrypt.checkpw(request.getPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.PASSWORD_INVALID);
@@ -101,12 +104,13 @@ public class AuthServiceImpl implements AuthService {
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
-                .issuer("hng209")
+                .issuer("RamChay")
                 .issueTime(new Date())
                 .claim("permissions", permissions)
                 .claim("roles", user.getRoles()
                         .stream()
-                        .map(Role::getName))
+                        .map(Role::getName)
+                        .toList())
                 .jwtID(UUID.randomUUID().toString())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
@@ -126,12 +130,12 @@ public class AuthServiceImpl implements AuthService {
         Date exp = signedJWT.getJWTClaimsSet().getExpirationTime();
         boolean expired = exp.before(new Date());
 
-        if(expired)
+        if (expired)
             throw new CredentialsExpiredException("Session expired");
 
         boolean verified = signedJWT.verify(verifier);
 
-        if(!verified)
+        if (!verified)
             throw new BadCredentialsException("Bad token");
 
         return signedJWT;

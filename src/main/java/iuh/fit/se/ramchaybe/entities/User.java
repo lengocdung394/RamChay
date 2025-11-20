@@ -33,14 +33,15 @@ public class User { // Super class: lớp cha
     @Column(nullable = false)
     String password;
 
-    @Column(name = "is_active")
-    boolean isActive;
+//    @Column(name = "is_active")
+//    boolean isActive;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @ManyToMany
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

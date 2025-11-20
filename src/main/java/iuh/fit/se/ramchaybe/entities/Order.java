@@ -41,6 +41,9 @@ public class Order {
     @Column(name = "shipping_address")
     String shippingAddress;
 
+    @Column(name = "customer_phone")
+    String customerPhone;
+
     // Một khách hàng có thể có nhiều đơn hàng
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)

@@ -23,7 +23,7 @@ public enum ErrorCode {
     SESSION_EXPIRED(3005, "Session expired", HttpStatus.UNAUTHORIZED),
     UNAUTHENTICATED(4004, "unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(4003, "access denied", HttpStatus.FORBIDDEN),
-    INVALID_DOB(3003, "invalid date of birth", HttpStatus.BAD_REQUEST)
+    INVALID_DOB(3003, "invalid date of birth", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;
